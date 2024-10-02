@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Carro</title>
+    <!-- Importando a fonte Poppins do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #EAF0F7; /* Fundo azul claro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Sombra mais profunda */
+            width: 100%;
+            max-width: 600px; /* Aumentei para 600px */
+            text-align: center;
+            overflow-y: auto; /* Garantir rolagem quando necessário */
+            max-height: 90vh; /* Para evitar que ultrapasse a tela */
+        }
+
+        h1 {
+            font-size: 26px;
+            margin-bottom: 20px;
+            color: #2C3E50;
+            font-weight: 600;
+        }
+
+        label {
+            font-size: 14px;
+            color: #34495E;
+            margin-top: 10px;
+            display: block;
+            text-align: left; /* Texto alinhado à esquerda para os campos */
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;  /* Bordas arredondadas suaves */
+            font-size: 15px;
+            box-sizing: border-box; /* Evita que o padding aumente o tamanho total */
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .form-row div {
+            width: 48%; /* Dois campos lado a lado */
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #2C3E50; /* Azul escuro */
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #34495E;
+            transform: translateY(-3px); /* Efeito de elevação */
+        }
+
+        /* Ajustando a largura dos campos */
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-row div {
+            width: 48%; /* Faz com que duas colunas caibam lado a lado */
+        }
+
+        /* Feedback de erro */
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            text-align: left;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Cadastrar Novo Carro</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <div>
+                    <label for="id_marca">Marca:</label>
+                    {{ form.marca }}
+                </div>
+                <div>
+                    <label for="id_modelo">Modelo:</label>
+                    {{ form.modelo }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="id_ano">Ano:</label>
+                    {{ form.ano }}
+                </div>
+                <div>
+                    <label for="id_cor">Cor:</label>
+                    {{ form.cor }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label for="id_combustivel">Combustível:</label>
+                    {{ form.combustivel }}
+                </div>
+                <div>
+                    <label for="id_quilometragem">Quilometragem:</label>
+                    {{ form.quilometragem }}
+                </div>
+            </div>
+
+            <label for="id_preco">Preço:</label>
+            {{ form.preco }}
+
+            <label for="id_descricao">Descrição:</label>
+            {{ form.descricao }}
+
+            <label for="id_foto">Foto:</label>
+            {{ form.foto }}
+
+            <button type="submit">Cadastrar Carro</button>
+
+            {% if form.errors %}
+                <div class="error-message">
+                    <ul>
+                        {% for field in form %}
+                            {% if field.errors %}
+                                <li>{{ field.label }}: {{ field.errors|join:", " }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+
+</body>
+</html>

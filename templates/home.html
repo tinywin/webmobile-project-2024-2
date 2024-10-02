@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Sistema de Gerenciamento de Venda e Compra de Carros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #e3f2fd;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .home-container {
+            background-color: #ffffff;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .home-container h1 {
+            font-size: 40px;
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .home-container p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .home-container button {
+            width: 240px;
+            padding: 14px;
+            background-color: #34495E; /* Azul suave */
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .home-container button i {
+            margin-right: 10px;
+        }
+
+        .home-container button:hover {
+            background-color: #1976D2; /* Azul mais escuro */
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .home-container {
+                padding: 30px;
+            }
+
+            .home-container h1 {
+                font-size: 32px;
+            }
+
+            .home-container p {
+                font-size: 16px;
+            }
+
+            .home-container button {
+                width: 200px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="home-container">
+        <h1>Bem-vindo ao Sistema de Gerenciamento de Venda e Compra de Carros!</h1>
+        <p>Aqui você pode gerenciar suas vendas e compras de carros de forma fácil e eficiente.</p>
+
+        <!-- Verificação de autenticação do usuário -->
+        {% if user.is_authenticated %}
+            <button onclick="location.href='{% url 'cadastrar-carro' %}'">
+                <i class="fas fa-car"></i> Cadastrar Carro
+            </button>
+            <button onclick="location.href='{% url 'listagem' %}'">
+                <i class="fas fa-list"></i> Listar Carros
+            </button>
+            <button onclick="location.href='{% url 'logout' %}'">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        {% else %}
+            <button onclick="location.href='{% url 'entrar' %}'">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <button onclick="location.href='{% url 'cadastro' %}'">
+                <i class="fas fa-user-plus"></i> Cadastro
+            </button>
+        {% endif %}
+    </div>
+
+</body>
+</html>

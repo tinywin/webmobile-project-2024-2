@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Carros</title>
+    <!-- Importando a fonte Poppins do Google Fonts para um estilo mais sofisticado -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Importando FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Estilo da barra de navegação */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #34495E; /* Azul suave */
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            margin: 0 15px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar a i {
+            margin-right: 8px;
+        }
+
+        .navbar a:hover {
+            background-color: #1976D2; /* Azul mais escuro ao passar o mouse */
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 40px 0 30px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .carros-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 0 40px;
+            margin-bottom: 50px; /* Espaço adicional para uma melhor rolagem */
+        }
+
+        .carro-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .carro-card:hover {
+            transform: scale(1.05);
+        }
+
+        .carro-card h2 {
+            color: #00796b;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .carro-card p {
+            color: #555;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .carro-card img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .preco {
+            font-size: 18px;
+            color: #388e3c;
+            font-weight: bold;
+        }
+
+        .no-foto {
+            color: #e74c3c;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f7f7f9;
+            color: #555;
+            font-size: 14px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar refinada com botões suaves e ícones -->
+    <div class="navbar">
+        <a href="{% url 'home' %}">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="{% url 'entrar' %}">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{% url 'cadastro' %}">
+            <i class="fas fa-user-plus"></i> Cadastro
+        </a>
+        <a href="{% url 'cadastrar-carro' %}">
+            <i class="fas fa-car"></i> Cadastrar Carro
+        </a>
+        <a href="{% url 'listagem' %}">
+            <i class="fas fa-list"></i> Listar Carros
+        </a>
+        <a href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i> Sair
+        </a>
+    </div>
+
+    <h1>Carros Disponíveis</h1>
+    
+    <!-- Container de carros mais elegante -->
+    <div class="carros-container">
+        {% for carro in carros %}
+            <div class="carro-card">
+                <h2>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h2>
+                <p>Cor: {{ carro.cor }}</p>
+                <p>Combustível: {{ carro.combustivel }}</p>
+                <p class="preco">Preço: R$ {{ carro.preco }}</p>
+                <p>Quilometragem: {{ carro.quilometragem }} km</p>
+
+                {% if carro.foto %}
+                    <img src="{{ carro.foto.url }}" alt="{{ carro.modelo }}">
+                {% else %}
+                    <p class="no-foto">Sem foto disponível</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Footer suave -->
+    <footer>
+        &copy; 2024 Sistema de Gerenciamento de Carros. Todos os direitos reservados.
+    </footer>
+
+</body>
+</html>
