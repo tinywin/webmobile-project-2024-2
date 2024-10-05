@@ -113,6 +113,9 @@
 
         <!-- Verificação de autenticação do usuário -->
         {% if user.is_authenticated %}
+            <button onclick="location.href='{% url 'meuperfil' %}'">
+                <i class="fas fa-user"></i> Meu Perfil
+            </button>
             <button onclick="location.href='{% url 'cadastrar-carro' %}'">
                 <i class="fas fa-car"></i> Cadastrar Carro
             </button>

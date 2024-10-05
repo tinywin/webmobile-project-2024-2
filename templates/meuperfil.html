@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .perfil-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 600px;
+            text-align: center;
+        }
+        .perfil-container h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .perfil-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        .perfil-container p {
+            font-size: 18px;
+            color: #666;
+            margin: 10px 0;
+        }
+        .perfil-container button {
+            background-color: #34495E;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .perfil-container button:hover {
+            background-color: #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <div class="perfil-container">
+        <h1>Perfil de {{ usuario.username }}</h1>
+        
+        <!-- Foto de perfil -->
+        {% if usuario.foto %}
+            <img src="{{ usuario.foto.url }}" alt="Foto de Perfil">
+        {% else %}
+            <img src="https://via.placeholder.com/150" alt="Sem foto disponível">
+        {% endif %}
+
+        <!-- Exibe os dados do usuário -->
+        <p><strong>Nome:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
+        <p><strong>E-mail:</strong> {{ usuario.email }}</p>
+        <p><strong>Data de Cadastro:</strong> {{ usuario.date_joined|date:"d/m/Y" }}</p>
+
+        <!-- Botão de editar perfil -->
+        <button onclick="location.href='{% url 'editar-perfil' %}'">Editar Perfil</button>
+    </div>
+</body>
+</html>

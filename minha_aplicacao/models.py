@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date
+from django.contrib.auth.models import User
 
 # Função para validar o ano do carro
 def validar_ano(value):
@@ -58,13 +59,14 @@ class Carro(models.Model):
         ('ELETRICO', 'Elétrico'),
     ]
 
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)  # Relaciona com o usuário
     marca = models.CharField(max_length=255, choices=MARCAS_CHOICES)
     modelo = models.CharField(max_length=255)
-    ano = models.IntegerField(validators=[validar_ano])  # Validação para o ano
+    ano = models.IntegerField()
     cor = models.CharField(max_length=255, choices=CORES_CHOICES)
     combustivel = models.CharField(max_length=255, choices=COMBUSTIVEL_CHOICES)
     quilometragem = models.PositiveIntegerField()
-    preco = models.DecimalField(max_digits=10, decimal_places=2, validators=[validar_preco])  # Validação para o preço
+    preco = models.DecimalField(max_digits=10, decimal_places=2)
     descricao = models.TextField(blank=True, null=True)
     foto = models.ImageField(upload_to='carros/', blank=True, null=True)
 

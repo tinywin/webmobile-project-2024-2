@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .perfil-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 100%;
+            text-align: left;
+        }
+
+        .perfil-container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .perfil-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .perfil-container label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .perfil-container input[type="text"],
+        .perfil-container input[type="email"],
+        .perfil-container input[type="file"],
+        .perfil-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .perfil-container input[readonly] {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .perfil-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #34495E;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .perfil-container button:hover {
+            background-color: #2C3E50;
+        }
+
+        .perfil-container .foto-perfil {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .perfil-container .foto-perfil img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-list {
+            color: #e74c3c;
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .error-list li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="perfil-container">
+        <h1>Editar Perfil</h1>
+
+        <!-- Exibição da foto de perfil -->
+        <div class="foto-perfil">
+            {% if user.profile.foto %}
+                <img src="{{ user.profile.foto.url }}" alt="Foto de Perfil">
+            {% else %}
+                <img src="https://via.placeholder.com/150" alt="Sem foto disponível">
+            {% endif %}
+        </div>
+
+        <!-- Formulário de edição -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <label for="first_name">Nome:</label>
+            {{ form.first_name }}
+
+            <label for="last_name">Sobrenome:</label>
+            {{ form.last_name }}
+
+            <label for="email">E-mail:</label>
+            {{ form.email }}
+
+            <!-- CPF e Data de Nascimento apenas como leitura -->
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" value="{{ user.profile.cpf }}" readonly>
+
+            <label for="data_nascimento">Data de Nascimento:</label>
+            <input type="text" id="data_nascimento" name="data_nascimento" value="{{ user.profile.data_nascimento|date:'d/m/Y' }}" readonly>
+
+            <label for="foto">Alterar Foto de Perfil:</label>
+            {{ form.foto }}
+
+            <!-- Alterar senha -->
+            <label for="password">Nova Senha:</label>
+            {{ form.password }}
+
+            <label for="confirm_password">Confirmar Nova Senha:</label>
+            {{ form.confirm_password }}
+
+            <button type="submit">Salvar Alterações</button>
+
+            <!-- Exibe os erros do formulário -->
+            {% if form.errors %}
+                <ul class="error-list">
+                    {% for field, errors in form.errors.items %}
+                        <li>{{ field }}: {{ errors|join:", " }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
