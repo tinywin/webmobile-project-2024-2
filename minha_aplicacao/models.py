@@ -1,3 +1,4 @@
+# models.py
 from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date
@@ -62,13 +63,25 @@ class Carro(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)  # Relaciona com o usuário
     marca = models.CharField(max_length=255, choices=MARCAS_CHOICES)
     modelo = models.CharField(max_length=255)
-    ano = models.IntegerField()
+    ano = models.IntegerField(validators=[validar_ano])  # Aplica a validação
     cor = models.CharField(max_length=255, choices=CORES_CHOICES)
     combustivel = models.CharField(max_length=255, choices=COMBUSTIVEL_CHOICES)
     quilometragem = models.PositiveIntegerField()
-    preco = models.DecimalField(max_digits=10, decimal_places=2)
+    preco = models.DecimalField(max_digits=10, decimal_places=2, validators=[validar_preco])  # Aplica a validação
     descricao = models.TextField(blank=True, null=True)
     foto = models.ImageField(upload_to='carros/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.marca} {self.modelo} ({self.ano}) - {self.cor}"
+
+class Profile(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # Associa o Profile ao User
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    email = models.EmailField(max_length=254, blank=True)
+    foto = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
+    cpf = models.CharField(max_length=11, blank=True, null=True)
+    data_nascimento = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.usuario.username} Profile"

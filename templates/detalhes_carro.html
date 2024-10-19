@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Carro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .carro-details {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .carro-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .detalhes {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .detalhes strong {
+            color: #333;
+        }
+
+        .voltar-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .voltar-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="carro-details">
+        <h1>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h1>
+        {% if carro.foto %}
+            <img src="{{ carro.foto.url }}" alt="{{ carro.modelo }}" class="carro-img">
+        {% else %}
+            <p>Sem foto disponível.</p>
+        {% endif %}
+        <p class="detalhes"><strong>Cor:</strong> {{ carro.cor }}</p>
+        <p class="detalhes"><strong>Preço:</strong> R$ {{ carro.preco }}</p>
+        <p class="detalhes"><strong>Quilometragem:</strong> {{ carro.quilometragem }} km</p>
+        <p class="detalhes"><strong>Combustível:</strong> {{ carro.combustivel }}</p>
+        <p class="detalhes"><strong>Descrição:</strong> {{ carro.descricao }}</p>
+        <a href="{% url 'anuncios_publicos' %}" class="voltar-btn">Voltar para Anúncios Públicos</a>
+    </div>
+
+</body>
+</html>

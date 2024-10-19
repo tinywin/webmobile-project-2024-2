@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listagem de Carros</title>
-    <!-- Importando a fonte Poppins do Google Fonts para um estilo mais sofisticado -->
+    <title>Meus Carros</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Importando FontAwesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
@@ -16,53 +14,58 @@
             padding: 0;
         }
 
-        /* Estilo da barra de navegação */
+        /* Navbar */
         .navbar {
             display: flex;
-            justify-content: center;
-            background-color: #34495E; /* Azul suave */
-            padding: 15px 20px;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #34495E;
+            padding: 15px 40px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .navbar a {
+        .navbar-logo {
+            font-size: 24px;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar-menu a {
             text-decoration: none;
             color: white;
             font-weight: 600;
-            margin: 0 15px;
             padding: 10px 20px;
             border-radius: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
             display: flex;
             align-items: center;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .navbar a i {
+        .navbar-menu a:hover {
+            background-color: #1976D2;
+        }
+
+        .navbar-menu a i {
             margin-right: 8px;
         }
 
-        .navbar a:hover {
-            background-color: #1976D2; /* Azul mais escuro ao passar o mouse */
-            color: white;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin: 40px 0 30px;
-            font-size: 28px;
-            font-weight: 600;
-        }
-
+        /* Container dos carros */
         .carros-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
-            padding: 0 40px;
-            margin-bottom: 50px; /* Espaço adicional para uma melhor rolagem */
+            padding: 40px;
+            margin-bottom: 50px;
         }
 
         .carro-card {
@@ -78,93 +81,112 @@
             transform: scale(1.05);
         }
 
-        .carro-card h2 {
-            color: #00796b;
-            margin-bottom: 10px;
-            font-size: 22px;
-        }
-
-        .carro-card p {
-            color: #555;
-            margin: 5px 0;
-            font-size: 16px;
-        }
-
         .carro-card img {
             max-width: 100%;
             border-radius: 10px;
-            margin-top: 10px;
+            margin: 10px 0;
         }
 
-        .preco {
-            font-size: 18px;
-            color: #388e3c;
-            font-weight: bold;
+        .buttons {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
         }
 
-        .no-foto {
-            color: #e74c3c;
-            font-style: italic;
+        .buttons a {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            width: 100px;
+            text-align: center;
         }
 
+        .edit-btn {
+            background-color: #3498db;
+        }
+
+        .edit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        /* Footer */
         footer {
             text-align: center;
             padding: 20px;
             background-color: #f7f7f9;
             color: #555;
-            font-size: 14px;
             position: fixed;
             width: 100%;
             bottom: 0;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .navbar-menu {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar refinada com botões suaves e ícones -->
     <div class="navbar">
-        <a href="{% url 'home' %}">
-            <i class="fas fa-home"></i> Home
-        </a>
-        <a href="{% url 'entrar' %}">
-            <i class="fas fa-sign-in-alt"></i> Login
-        </a>
-        <a href="{% url 'cadastro' %}">
-            <i class="fas fa-user-plus"></i> Cadastro
-        </a>
-        <a href="{% url 'cadastrar-carro' %}">
-            <i class="fas fa-car"></i> Cadastrar Carro
-        </a>
-        <a href="{% url 'listagem' %}">
-            <i class="fas fa-list"></i> Listar Carros
-        </a>
-        <a href="{% url 'logout' %}">
-            <i class="fas fa-sign-out-alt"></i> Sair
-        </a>
+        <div class="navbar-logo">Meus Carros</div>
+        <div class="navbar-menu">
+            <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
+            <a href="{% url 'cadastrar-carro' %}"><i class="fas fa-car"></i> Cadastrar</a>
+            <a href="{% url 'listagem' %}"><i class="fas fa-list"></i> Listagem</a>
+            <a href="{% url 'anuncios_publicos' %}"><i class="fas fa-bullhorn"></i> Anúncios Públicos</a>
+            <a href="{% url 'meuperfil' %}"><i class="fas fa-user"></i> Perfil</a>
+            <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </div>
     </div>
 
-    <h1>Carros Disponíveis</h1>
-    
-    <!-- Container de carros mais elegante -->
+    <h1 style="text-align: center; margin: 20px 0;">Meus Carros</h1>
+
     <div class="carros-container">
         {% for carro in carros %}
             <div class="carro-card">
                 <h2>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h2>
                 <p>Cor: {{ carro.cor }}</p>
-                <p>Combustível: {{ carro.combustivel }}</p>
-                <p class="preco">Preço: R$ {{ carro.preco }}</p>
-                <p>Quilometragem: {{ carro.quilometragem }} km</p>
-
+                <p>Preço: R$ {{ carro.preco }}</p>
                 {% if carro.foto %}
-                    <img src="{{ carro.foto.url }}" alt="{{ carro.modelo }}">
+                    <img src="{{ carro.foto.url }}" alt="{{ carro.modelo }}"/>
                 {% else %}
                     <p class="no-foto">Sem foto disponível</p>
                 {% endif %}
+                <div class="buttons">
+                    <a href="{% url 'editar-carro' carro.id %}" class="edit-btn">Editar</a>
+                    <a href="{% url 'remover-carro' carro.id %}" class="delete-btn">Remover</a>
+                </div>
             </div>
+        {% empty %}
+            <p style="text-align: center; color: #e74c3c; font-style: italic;">Nenhum carro encontrado.</p>
         {% endfor %}
     </div>
 
-    <!-- Footer suave -->
     <footer>
         &copy; 2024 Sistema de Gerenciamento de Carros. Todos os direitos reservados.
     </footer>

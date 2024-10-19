@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anúncios Públicos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #34495E;
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            margin: 0 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar a i {
+            margin-right: 8px;
+        }
+
+        .navbar a:hover {
+            background-color: #1976D2;
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin: 40px 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .carros-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 0 40px;
+            margin-bottom: 50px;
+        }
+
+        .carro-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .carro-card:hover {
+            transform: scale(1.05);
+        }
+
+        .carro-card h2 {
+            color: #00796b;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+
+        .carro-card p {
+            color: #555;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+
+        .carro-card img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .no-foto {
+            color: #e74c3c;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .preco {
+            font-size: 18px;
+            color: #388e3c;
+            font-weight: bold;
+        }
+
+        .no-carros {
+            text-align: center;
+            color: #e74c3c;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f7f7f9;
+            color: #555;
+            font-size: 14px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
+        <a href="{% url 'anuncios_publicos' %}"><i class="fas fa-bullhorn"></i> Anúncios Públicos</a>
+        <a href="{% url 'cadastrar-carro' %}"><i class="fas fa-car"></i> Cadastrar Carro</a>
+        <a href="{% url 'listagem' %}"><i class="fas fa-list"></i> Meus Carros</a>
+        <a href="{% url 'meuperfil' %}"><i class="fas fa-user"></i> Meu Perfil</a>
+        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Sair</a>
+    </div>    
+    
+    <h1>Anúncios Públicos de Carros</h1>
+    <div class="carros-container">
+        {% for carro in carros %}
+            <div class="carro-card">
+                <h2><a href="{% url 'detalhes_carro' carro.id %}" style="text-decoration: none; color: inherit;">{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</a></h2>
+                <p>Cor: {{ carro.cor }}</p>
+                <p class="preco">Preço: R$ {{ carro.preco }}</p>
+                {% if carro.foto %}
+                    <img src="{{ carro.foto.url }}" alt="{{ carro.modelo }}">
+                {% else %}
+                    <p class="no-foto">Sem foto disponível</p>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p class="no-carros">Nenhum carro disponível no momento.</p>
+        {% endfor %}
+    </div>
+
+    <footer>
+        &copy; 2024 Sistema de Gerenciamento de Carros. Todos os direitos reservados.
+    </footer>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from .models import Carro  # Importe o modelo Carro do arquivo models.py
 import datetime
 import re
+from .models import Profile  # Assumindo que você tem um modelo Profile
 from django.utils import timezone
 
 class LoginForm(forms.Form):
@@ -64,14 +65,8 @@ class CarroForm(forms.ModelForm):
         return ano
 
 class EditarPerfilForm(forms.ModelForm):
-    foto = forms.ImageField(required=False)  # Campo de foto opcional
+    foto = forms.ImageField(required=False, label='Foto de Perfil')
 
     class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email', 'foto']  # Adiciona 'foto' aqui
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        if commit:
-            user.save()
-        return user
+        model = Profile  # Use o modelo de perfil
+        fields = ['first_name', 'last_name', 'email', 'foto'] 

@@ -11,37 +11,84 @@
             background-color: #f1f1f1;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #34495E;
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            margin: 0 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #1976D2;
+            color: white;
+        }
+
         .perfil-container {
             background-color: #ffffff;
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-            width: 600px;
+            max-width: 400px; /* Ajuste a largura do container */
+            margin: 20px auto; /* Centraliza a seção do perfil */
             text-align: center;
         }
+
         .perfil-container h1 {
-            font-size: 28px;
+            font-size: 24px; /* Ajuste o tamanho da fonte */
             margin-bottom: 20px;
             color: #333;
         }
-        .perfil-container img {
-            width: 150px;
-            height: 150px;
+
+        .foto-perfil {
+            width: 120px; /* Ajuste a largura */
+            height: 120px; /* Ajuste a altura */
             border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 20px;
+            background-color: #34495E;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin: 0 auto 20px;
         }
+
+        .foto-perfil img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .inicial {
+            color: white;
+            font-size: 48px; /* Tamanho da letra para inicial */
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
         .perfil-container p {
-            font-size: 18px;
+            font-size: 16px;
             color: #666;
             margin: 10px 0;
         }
-        .perfil-container button {
+
+        .perfil-container button, .perfil-container a {
             background-color: #34495E;
             color: white;
             border: none;
@@ -50,30 +97,59 @@
             font-size: 16px;
             cursor: pointer;
             margin-top: 20px;
+            transition: background-color 0.3s;
+            text-decoration: none; /* Remove sublinhado do link */
         }
-        .perfil-container button:hover {
+
+        .perfil-container button:hover, .perfil-container a:hover {
             background-color: #2C3E50;
+        }
+
+        .alterar-senha {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #3498db;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between; /* Espaçamento entre os botões */
+            margin-top: 20px; /* Margem superior para os botões */
         }
     </style>
 </head>
 <body>
+
+    <!-- Barra de navegação -->
+    <div class="navbar">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'anuncios_publicos' %}">Anúncios Públicos</a>
+        <a href="{% url 'cadastrar-carro' %}">Cadastrar Carro</a>
+        <a href="{% url 'listagem' %}">Meus Carros</a>
+        <a href="{% url 'meuperfil' %}">Meu Perfil</a>
+        <a href="{% url 'logout' %}">Sair</a>
+    </div>
+    
     <div class="perfil-container">
         <h1>Perfil de {{ usuario.username }}</h1>
         
-        <!-- Foto de perfil -->
-        {% if usuario.foto %}
-            <img src="{{ usuario.foto.url }}" alt="Foto de Perfil">
-        {% else %}
-            <img src="https://via.placeholder.com/150" alt="Sem foto disponível">
-        {% endif %}
+        <div class="foto-perfil">
+            {% if usuario.profile.foto %}
+                <img src="{{ usuario.profile.foto.url }}" alt="Foto de Perfil">
+            {% else %}
+                <span class="inicial">{{ usuario.first_name|slice:":1" }}</span>
+            {% endif %}
+        </div>
 
-        <!-- Exibe os dados do usuário -->
         <p><strong>Nome:</strong> {{ usuario.first_name }} {{ usuario.last_name }}</p>
         <p><strong>E-mail:</strong> {{ usuario.email }}</p>
         <p><strong>Data de Cadastro:</strong> {{ usuario.date_joined|date:"d/m/Y" }}</p>
 
-        <!-- Botão de editar perfil -->
+        <a href="{% url 'alterar-senha' %}" class="alterar-senha">Alterar Senha</a>
         <button onclick="location.href='{% url 'editar-perfil' %}'">Editar Perfil</button>
     </div>
+
 </body>
 </html>

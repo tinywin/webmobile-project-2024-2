@@ -4,13 +4,17 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .forms import LoginForm, CadastroForm, CarroForm, EditarPerfilForm
 from django.core.exceptions import ValidationError
-from .models import Carro
+from .models import Carro, Profile
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from django.contrib import messages
+from django.views.generic.edit import UpdateView, DeleteView
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.views.generic import DetailView
 
 class CadastroView(View):
     template_name = 'cadastro.html'
@@ -62,14 +66,27 @@ class EditarPerfilView(View):
     template_name = 'editar-perfil.html'
 
     def get(self, request):
-        form = EditarPerfilForm(instance=request.user)
+        user = request.user
+        form = EditarPerfilForm(instance=user.profile)  # Usa o perfil do usuário
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        form = EditarPerfilForm(request.POST, request.FILES, instance=request.user)  # Inclui request.FILES
+        user = request.user
+        form = EditarPerfilForm(request.POST, request.FILES, instance=user.profile)  # Inclui request.FILES para upload de foto
+
         if form.is_valid():
-            form.save()
-            return redirect('meuperfil')  # Redireciona para a página de perfil
+            profile = form.save(commit=False)
+            profile.user = user  # Associa o perfil ao usuário
+            profile.save()  # Salva o perfil
+
+            # Atualiza os campos do usuário
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.email = form.cleaned_data['email']
+            user.save()  # Salva o usuário
+
+            return redirect('meuperfil')  # Redireciona para o perfil após salvar
+
         return render(request, self.template_name, {'form': form})
     
 class CadastroView(View):
@@ -110,31 +127,30 @@ class HomeView(View):
     def get(self, request):
         return render(request, self.template_name)
 
-class ListagemView(View):
+class ListagemView(LoginRequiredMixin, View):
     template_name = 'listagem.html'
+    login_url = reverse_lazy('entrar')
 
     def get(self, request):
-        carros = Carro.objects.all()  # Pega todos os carros no banco de dados
+        carros = Carro.objects.filter(usuario=request.user)  # Filtra os carros do usuário logado
         return render(request, self.template_name, {'carros': carros})
 
-class CadastrarCarroView(LoginRequiredMixin, View):
-    login_url = reverse_lazy('entrar')  # Redireciona para login se não estiver autenticado
-    template_name = 'cadastrar-carro.html'  # Certifique-se que o template existe
+class CadastrarCarroView(View):
+    template_name = 'cadastrar-carro.html'
 
     def get(self, request):
         form = CarroForm()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        form = CarroForm(request.POST, request.FILES)  # Adiciona suporte a upload de arquivos (fotos)
+        form = CarroForm(request.POST, request.FILES)
         if form.is_valid():
             carro = form.save(commit=False)
-            carro.usuario = request.user  # Associa o carro ao usuário autenticado
+            carro.usuario = request.user  # Associa o carro ao usuário logado
             carro.save()
-            return redirect('home')
-        else:
-            return render(request, self.template_name, {'form': form}) 
-
+            messages.success(request, "Carro cadastrado com sucesso!")
+            return redirect('listagem')  # Alterado para o nome correto da URL
+        return render(request, self.template_name, {'form': form})
 @method_decorator(login_required, name='dispatch')
 class MeuPerfilView(View):
     template_name = 'meuperfil.html'
@@ -145,3 +161,42 @@ class MeuPerfilView(View):
             'usuario': request.user,
             'carros': carros_usuario  # Passa os carros para o template
         })
+
+class AnunciosPublicosView(View):
+    template_name = 'anuncios_publicos.html'
+
+    def get(self, request):
+        carros = Carro.objects.all()  # Busca todos os carros cadastrados
+        return render(request, self.template_name, {'carros': carros})
+    
+class EditarCarroView(UpdateView):
+    model = Carro
+    fields = ['marca', 'modelo', 'ano', 'cor', 'preco', 'quilometragem', 'combustivel', 'descricao', 'foto']
+    template_name = 'editar_carro.html'
+    success_url = reverse_lazy('listagem')
+
+class RemoverCarroView(DeleteView):
+    model = Carro
+    template_name = 'remover_carro.html'
+    success_url = reverse_lazy('listagem')
+
+class AlterarSenhaView(LoginRequiredMixin, View):
+    template_name = 'alterar_senha.html'
+
+    def get(self, request):
+        form = PasswordChangeForm(user=request.user)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Mantém a sessão do usuário após a troca de senha
+            messages.success(request, 'Sua senha foi alterada com sucesso!')
+            return redirect('meuperfil')  # Redireciona para a página do perfil
+        return render(request, self.template_name, {'form': form})
+    
+class DetalhesCarroView(DetailView):
+    model = Carro
+    template_name = 'detalhes_carro.html'  # Certifique-se de que este nome está correto
+    context_object_name = 'carro'
