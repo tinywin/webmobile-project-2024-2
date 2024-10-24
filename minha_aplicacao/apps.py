@@ -1,4 +1,4 @@
-# apps.py
+# minha_aplicacao/apps.py
 from django.apps import AppConfig
 
 class MinhaAplicacaoConfig(AppConfig):
@@ -6,4 +6,4 @@ class MinhaAplicacaoConfig(AppConfig):
     name = 'minha_aplicacao'
 
     def ready(self):
-        import minha_aplicacao.signals  # Certifique-se de que o módulo de sinais seja importado
+        import minha_aplicacao.signals  # Importa as signals

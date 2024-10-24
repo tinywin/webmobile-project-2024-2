@@ -64,9 +64,38 @@ class CarroForm(forms.ModelForm):
             raise forms.ValidationError(f"Por favor, insira um ano entre 1900 e {ano_atual}.")
         return ano
 
+
 class EditarPerfilForm(forms.ModelForm):
-    foto = forms.ImageField(required=False, label='Foto de Perfil')
+    # Campos do User para serem editados no mesmo formulário
+    first_name = forms.CharField(max_length=30, required=False, label='Nome')
+    last_name = forms.CharField(max_length=30, required=False, label='Sobrenome')
+    email = forms.EmailField(max_length=254, required=False, label='Email')
 
     class Meta:
-        model = Profile  # Use o modelo de perfil
-        fields = ['first_name', 'last_name', 'email', 'foto'] 
+        model = Profile
+        fields = ['foto', 'data_nascimento', 'cpf']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(EditarPerfilForm, self).__init__(*args, **kwargs)
+        
+        if user:
+            self.fields['first_name'].initial = user.first_name
+            self.fields['last_name'].initial = user.last_name
+            self.fields['email'].initial = user.email
+
+    def save(self, commit=True):
+        # Salva o Profile
+        profile = super(EditarPerfilForm, self).save(commit=False)
+        if commit:
+            profile.save()
+
+        # Salva o User relacionado
+        user = profile.user
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+
+        return profile
