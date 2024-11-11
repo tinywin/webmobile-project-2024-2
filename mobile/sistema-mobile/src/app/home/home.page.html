@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Anúncios Públicos de Carros</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Navbar -->
+  <div class="navbar">
+    <a routerLink="/home"><ion-icon name="home"></ion-icon> Home</a>
+    <a routerLink="/anuncios-publicos"><ion-icon name="megaphone"></ion-icon> Anúncios Públicos</a>
+    <a routerLink="/cadastrar-carro"><ion-icon name="car"></ion-icon> Cadastrar Carro</a>
+    <a routerLink="/listagem"><ion-icon name="list"></ion-icon> Meus Carros</a>
+    <a routerLink="/meuperfil"><ion-icon name="person"></ion-icon> Meu Perfil</a>
+    <a routerLink="/logout"><ion-icon name="log-out"></ion-icon> Sair</a>
+  </div>
+
+  <!-- Título -->
+  <h1>Anúncios Públicos de Carros</h1>
+
+  <!-- Conteúdo dos Carros -->
+  <div class="carros-container">
+    <div class="carro-card" *ngFor="let carro of carros">
+      <h2>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h2>
+      <p>Cor: {{ carro.cor }}</p>
+      <p class="preco">Preço: R$ {{ carro.preco }}</p>
+      <ion-img *ngIf="carro.foto" [src]="carro.foto"></ion-img>
+      <p class="no-foto" *ngIf="!carro.foto">Sem foto disponível</p>
+    </div>
+    <p class="no-carros" *ngIf="!carros.length">Nenhum carro disponível no momento.</p>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2024 Sistema de Gerenciamento de Carros. Todos os direitos reservados.
+  </footer>
+</ion-content>

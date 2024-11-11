@@ -1,0 +1,22 @@
+<ion-content class="login-content">
+  <div class="login-container">
+    <h1>Teste: Página de Login</h1> <!-- Texto temporário para testar -->
+    <h1>Entrar</h1> <!-- Título da tela de login -->
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <ion-item>
+        <ion-input formControlName="username" type="text" placeholder="Usuário"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="password" type="password" placeholder="Senha"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" type="submit">Login</ion-button>
+    </form>
+
+    <p *ngIf="loginError" class="error-message">{{ loginError }}</p>
+
+    <ion-button expand="block" fill="outline" (click)="goToCadastro()">Criar conta</ion-button>
+    <a href="#" class="forgot-link" (click)="esqueceuSenha()">Esqueceu a senha?</a>
+  </div>
+</ion-content>

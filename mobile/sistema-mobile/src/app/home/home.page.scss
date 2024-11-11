@@ -1,0 +1,118 @@
+// Estilos Globais
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f7f9;
+}
+
+// Navbar
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  background-color: #34495E;
+  padding: 15px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    margin: 0 10px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    ion-icon {
+      margin-right: 8px;
+    }
+
+    &:hover {
+      background-color: #1976D2;
+    }
+  }
+}
+
+// Título
+h1 {
+  text-align: center;
+  color: #333;
+  margin: 40px 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+// Contêiner de Carros
+.carros-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 0 40px;
+  margin-bottom: 50px;
+}
+
+// Cartão de Carro
+.carro-card {
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  h2 {
+    color: #00796b;
+    margin-bottom: 10px;
+    font-size: 22px;
+  }
+
+  p {
+    color: #555;
+    margin: 5px 0;
+    font-size: 16px;
+  }
+
+  .preco {
+    font-size: 18px;
+    color: #388e3c;
+    font-weight: bold;
+  }
+
+  ion-img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  .no-foto {
+    color: #e74c3c;
+    font-style: italic;
+    margin-top: 10px;
+  }
+}
+
+// Mensagem de Carros
+.no-carros {
+  text-align: center;
+  color: #e74c3c;
+  font-style: italic;
+}
+
+// Rodapé
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f7f7f9;
+  color: #555;
+  font-size: 14px;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}

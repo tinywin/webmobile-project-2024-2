@@ -22,6 +22,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView  # Importação necessária
+from rest_framework.authtoken.models import Token  # Importação necessária
 
 # ViewSet para o Profile
 class ProfileViewSet(viewsets.ViewSet):
@@ -217,3 +219,21 @@ class DetalhesCarroView(DetailView):
     model = Carro
     template_name = 'detalhes_carro.html'
     context_object_name = 'carro'
+
+class LoginAPI(APIView):
+    permission_classes = []  # Permite acesso público para o login
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
+        # Autenticar o usuário
+        user = authenticate(username=username, password=password)
+        
+        if user:
+            # Gera um token ou obtém o token existente
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+        else:
+            # Responde com erro se as credenciais forem inválidas
+            return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_400_BAD_REQUEST)
