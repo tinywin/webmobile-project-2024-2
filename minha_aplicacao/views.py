@@ -24,10 +24,12 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView  # Importação necessária
 from rest_framework.authtoken.models import Token  # Importação necessária
+from rest_framework.authentication import TokenAuthentication
 
 # ViewSet para o Profile
 class ProfileViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def list(self, request):
         profiles = Profile.objects.all()
@@ -41,7 +43,6 @@ class ProfileViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['get'])
     def me(self, request):
-        # Obter perfil do usuário logado
         profile = get_object_or_404(Profile, user=request.user)
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)

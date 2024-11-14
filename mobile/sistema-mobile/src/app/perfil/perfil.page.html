@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Anúncios de Carros</ion-title>
+    <ion-title>Meu Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -39,33 +39,22 @@
     </ion-col>
   </ion-row>
 
-  <!-- Título -->
-  <div class="ion-text-center ion-margin-bottom">
-    <h1>Anúncios de Carros</h1>
+  <!-- Perfil Container -->
+  <div class="perfil-container">
+    <h1>Perfil de {{ profile?.user?.username }}</h1>
+
+    <div class="foto-perfil">
+      <img *ngIf="profile?.foto; else inicial" [src]="getProfileImageUrl(profile.foto)" alt="Foto de Perfil">
+      <ng-template #inicial>
+        <span class="inicial">{{ profile?.user?.first_name?.charAt(0) }}</span>
+      </ng-template>
+    </div>
+
+    <p><strong>Nome:</strong> {{ profile?.user?.first_name }} {{ profile?.user?.last_name }}</p>
+    <p><strong>E-mail:</strong> {{ profile?.user?.email }}</p>
+    <p><strong>Data de Cadastro:</strong> {{ profile?.user?.date_joined }}</p>
+
+    <ion-button expand="block" fill="outline" routerLink="/alterar-senha">Alterar Senha</ion-button>
+    <ion-button expand="block" (click)="editarPerfil()">Editar Perfil</ion-button>
   </div>
-
-  <!-- Conteúdo dos Carros -->
-  <ion-grid class="carros-container">
-    <ion-row>
-      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let carro of carros">
-        <div class="carro-card ion-padding ion-margin-bottom">
-          <h2>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h2>
-          <p>Cor: {{ carro.cor }}</p>
-          <p class="preco">Preço: R$ {{ carro.preco }}</p>
-          <ion-img *ngIf="carro.foto" [src]="carro.foto" class="ion-margin-top"></ion-img>
-          <p class="no-foto ion-margin-top" *ngIf="!carro.foto">Sem foto disponível</p>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <p class="ion-text-center no-carros" *ngIf="!carros.length">Nenhum carro disponível no momento.</p>
-
-  <!-- Footer -->
-  <ion-footer>
-    <ion-toolbar>
-      <div class="ion-text-center">
-        &copy; 2024 Sistema de Gerenciamento de Carros. Todos os direitos reservados.
-      </div>
-    </ion-toolbar>
-  </ion-footer>
 </ion-content>

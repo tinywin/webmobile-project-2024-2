@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Editar Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="perfil-container">
+    <h1>Editar Perfil</h1>
+
+    <!-- Foto de perfil -->
+    <div class="foto-perfil">
+      <img [src]="perfilForm.get('foto')?.value ? perfilForm.get('foto')?.value : 'https://via.placeholder.com/100'" alt="Foto de Perfil">
+      <input type="file" (change)="alterarFoto($event)" />
+    </div>
+
+    <!-- Formulário de edição -->
+    <form [formGroup]="perfilForm" (ngSubmit)="onSubmit()">
+      <ion-item>
+        <ion-label position="stacked">Nome:</ion-label>
+        <ion-input formControlName="first_name" type="text" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Sobrenome:</ion-label>
+        <ion-input formControlName="last_name" type="text" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">E-mail:</ion-label>
+        <ion-input formControlName="email" type="email" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">CPF:</ion-label>
+        <ion-input formControlName="cpf" type="text" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Data de Nascimento:</ion-label>
+        <ion-datetime formControlName="data_nascimento" displayFormat="YYYY-MM-DD" required></ion-datetime>
+      </ion-item>
+
+      <ion-button expand="block" type="submit">Salvar Alterações</ion-button>
+    </form>
+
+    <!-- Exibição de erros -->
+    <div *ngIf="perfilForm.invalid && perfilForm.touched" class="error-list">
+      <p *ngIf="perfilForm.get('first_name')?.errors?.['required']">Nome é obrigatório.</p>
+      <p *ngIf="perfilForm.get('last_name')?.errors?.['required']">Sobrenome é obrigatório.</p>
+      <p *ngIf="perfilForm.get('email')?.errors?.['required']">E-mail é obrigatório.</p>
+      <p *ngIf="perfilForm.get('email')?.errors?.['email']">E-mail inválido.</p>
+      <p *ngIf="perfilForm.get('cpf')?.errors?.['required']">CPF é obrigatório.</p>
+      <p *ngIf="perfilForm.get('data_nascimento')?.errors?.['required']">Data de Nascimento é obrigatória.</p>
+    </div>
+  </div>
+</ion-content>

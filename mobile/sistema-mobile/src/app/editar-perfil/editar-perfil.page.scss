@@ -1,0 +1,38 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f1f1f1;
+}
+.perfil-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 20px auto;
+    text-align: center;
+}
+.foto-perfil {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.foto-perfil img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.error-list {
+    color: #e74c3c;
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.error-list p {
+    margin-bottom: 5px;
+}  

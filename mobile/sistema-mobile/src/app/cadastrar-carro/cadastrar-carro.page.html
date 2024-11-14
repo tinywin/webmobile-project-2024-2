@@ -1,0 +1,53 @@
+<div class="form-container">
+  <h1>Cadastrar Novo Carro</h1>
+  <form [formGroup]="carroForm" (ngSubmit)="cadastrarCarro()">
+    <div class="form-row">
+      <div>
+        <label for="marca">Marca:</label>
+        <input id="marca" formControlName="marca" type="text" placeholder="Marca do carro" />
+      </div>
+      <div>
+        <label for="modelo">Modelo:</label>
+        <input id="modelo" formControlName="modelo" type="text" placeholder="Modelo do carro" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label for="ano">Ano:</label>
+        <input id="ano" formControlName="ano" type="number" placeholder="Ano de fabricação" />
+      </div>
+      <div>
+        <label for="cor">Cor:</label>
+        <input id="cor" formControlName="cor" type="text" placeholder="Cor do carro" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label for="combustivel">Combustível:</label>
+        <select id="combustivel" formControlName="combustivel">
+          <option value="Gasolina">Gasolina</option>
+          <option value="Diesel">Diesel</option>
+          <option value="Etanol">Etanol</option>
+          <option value="Elétrico">Elétrico</option>
+        </select>
+      </div>
+      <div>
+        <label for="quilometragem">Quilometragem:</label>
+        <input id="quilometragem" formControlName="quilometragem" type="number" placeholder="Quilometragem" />
+      </div>
+    </div>
+
+    <label for="preco">Preço:</label>
+    <input id="preco" formControlName="preco" type="number" placeholder="Preço" />
+
+    <label for="descricao">Descrição:</label>
+    <textarea id="descricao" formControlName="descricao" placeholder="Descrição do carro"></textarea>
+
+    <label for="foto">Foto:</label>
+    <input id="foto" type="file" (change)="onFileChange($event)" />
+
+    <button type="submit">Cadastrar Carro</button>
+  </form>
+</div>
