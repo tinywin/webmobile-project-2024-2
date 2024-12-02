@@ -59,15 +59,14 @@
         .cadastro-container input[type="email"],
         .cadastro-container input[type="password"],
         .cadastro-container input[type="file"],
-        .cadastro-container input[type="date"],
-        .cadastro-container input[type="cpf"] {
-            width: 100%;  /* Garante que todos os campos tenham o mesmo tamanho */
+        .cadastro-container input[type="date"] {
+            width: 100%; 
             padding: 12px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 16px;
-            box-sizing: border-box;  /* Garante que padding e bordas sejam incluídos na largura total */
+            box-sizing: border-box;
         }
 
         .cadastro-container label {
@@ -141,6 +140,12 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 
+                <label for="first_name">Nome:</label>
+                {{ form.first_name }}
+
+                <label for="last_name">Sobrenome:</label>
+                {{ form.last_name }}
+
                 <label for="username">Nome de Usuário:</label>
                 {{ form.username }}
 
@@ -158,6 +163,9 @@
 
                 <label for="cpf">CPF:</label>
                 {{ form.cpf }}
+
+                <label for="telefone">Telefone:</label>
+                {{ form.telefone }}
 
                 <label for="foto">Foto de Perfil (opcional):</label>
                 {{ form.foto }}

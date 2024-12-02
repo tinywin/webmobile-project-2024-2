@@ -1,8 +1,8 @@
-# models.py
-from django.db import models
+from django.db import IntegrityError, models
 from django.core.exceptions import ValidationError
-from datetime import date
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
+from datetime import date
 import re
 
 # Validação do ano do carro
@@ -82,12 +82,24 @@ class Carro(models.Model):
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    cpf = models.CharField(max_length=11, blank=True, null=True)
+    cpf = models.CharField(max_length=11, unique=True, blank=True, null=True)
     foto = models.ImageField(upload_to='fotos_perfil/', blank=True, null=True)
     data_nascimento = models.DateField(blank=True, null=True)
+    telefone = models.CharField(
+        max_length=15,
+        blank=True,
+        null=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\+?1?\d{9,15}$',
+                message="O número de telefone deve estar no formato '+999999999'. Até 15 dígitos são permitidos."
+            )
+        ]
+    )
 
     def __str__(self):
         return f"{self.user.username} Profile"

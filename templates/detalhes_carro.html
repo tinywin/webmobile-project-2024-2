@@ -50,6 +50,19 @@
             color: #333;
         }
 
+        .usuario-link {
+            display: inline-block;
+            margin-top: 15px;
+            font-size: 16px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .usuario-link:hover {
+            color: #2980b9;
+        }
+
         .voltar-btn {
             display: inline-block;
             padding: 12px 20px;
@@ -81,6 +94,12 @@
         <p class="detalhes"><strong>Quilometragem:</strong> {{ carro.quilometragem }} km</p>
         <p class="detalhes"><strong>Combustível:</strong> {{ carro.combustivel }}</p>
         <p class="detalhes"><strong>Descrição:</strong> {{ carro.descricao }}</p>
+
+        <!-- Link para o perfil do usuário -->
+        <a href="{% url 'perfil_usuario' carro.usuario.id %}" class="usuario-link">
+            Ver perfil de {{ carro.usuario.username }}
+        </a>
+
         <a href="{% url 'anuncios_publicos' %}" class="voltar-btn">Voltar para Anúncios Públicos</a>
     </div>
 

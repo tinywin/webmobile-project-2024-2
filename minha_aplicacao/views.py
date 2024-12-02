@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.db import IntegrityError
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -15,16 +16,14 @@ from django.views.generic.edit import UpdateView, DeleteView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.views.generic import DetailView
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from .serializers import ProfileSerializer, CarroSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView  # Importação necessária
-from rest_framework.authtoken.models import Token  # Importação necessária
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
 
 # ViewSet para o Profile
 class ProfileViewSet(viewsets.ViewSet):
@@ -49,6 +48,9 @@ class ProfileViewSet(viewsets.ViewSet):
 
     def update(self, request, pk=None):
         profile = get_object_or_404(Profile, pk=pk)
+        if profile.user != request.user:
+            return Response({'error': 'Você não tem permissão para editar este perfil.'}, status=status.HTTP_403_FORBIDDEN)
+
         serializer = ProfileSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -65,7 +67,7 @@ class CarroViewSet(viewsets.ModelViewSet):
         # Associar carro ao usuário logado
         serializer.save(usuario=self.request.user)
 
-# Views Existentes
+
 class CadastroView(View):
     template_name = 'cadastro.html'
 
@@ -76,21 +78,35 @@ class CadastroView(View):
     def post(self, request):
         form = CadastroForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save(commit=False)
-            password = form.cleaned_data['password']
-            user.set_password(password)
-            user.save()
+            try:
+                # Salva o usuário e define a senha
+                user = form.save(commit=False)
+                password = form.cleaned_data['password']
+                user.set_password(password)
+                user.save()  # O sinal post_save criará o Profile automaticamente
 
-            # Criação automática do perfil do usuário
-            Profile.objects.create(
-                user=user,
-                foto=form.cleaned_data.get('foto'),
-                data_nascimento=form.cleaned_data.get('data_nascimento'),
-                cpf=form.cleaned_data.get('cpf')
-            )
+                # Atualiza os campos adicionais no Profile
+                profile = user.profile
+                profile.foto = form.cleaned_data.get('foto')
+                profile.data_nascimento = form.cleaned_data.get('data_nascimento')
+                profile.cpf = form.cleaned_data.get('cpf')
+                profile.telefone = form.cleaned_data.get('telefone')
+                profile.save()
 
-            login(request, user)
-            return redirect('home')
+                # Login automático
+                login(request, user)
+                if request.user.is_authenticated:
+                    messages.success(request, "Cadastro realizado com sucesso! Bem-vindo.")
+                    return redirect('home')
+                else:
+                    messages.error(request, "Erro ao autenticar usuário após cadastro.")
+            except IntegrityError as e:
+                print(f"IntegrityError: {e}")  # Depuração
+                messages.error(request, "Erro ao criar usuário. Verifique os dados informados.")
+        else:
+            print(f"Formulário inválido: {form.errors}")  # Depuração
+            messages.error(request, "Erro no formulário. Verifique os campos e tente novamente.")
+
         return render(request, self.template_name, {'form': form})
 
 class LoginView(View):
@@ -114,47 +130,47 @@ class LoginView(View):
                 return render(request, self.template_name, contexto)
         return render(request, self.template_name, {'form': form})
 
+
 class EditarPerfilView(View):
     template_name = 'editar-perfil.html'
 
     def get(self, request):
-        # Garante que o perfil do usuário logado exista
         profile, created = Profile.objects.get_or_create(user=request.user)
-
-        # Passa o usuário para o formulário
         form = EditarPerfilForm(instance=profile, user=request.user)
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
-        # Garante que o perfil do usuário logado exista
         profile, created = Profile.objects.get_or_create(user=request.user)
-
         form = EditarPerfilForm(request.POST, request.FILES, instance=profile, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Perfil atualizado com sucesso!")
             return redirect('meuperfil')
-
         return render(request, self.template_name, {'form': form})
-    
+
+
 class LogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('entrar')
 
+
+@method_decorator(login_required, name='dispatch')
 class HomeView(View):
     template_name = 'home.html'
 
     def get(self, request):
         return render(request, self.template_name)
 
+
 class ListagemView(LoginRequiredMixin, View):
     template_name = 'listagem.html'
     login_url = reverse_lazy('entrar')
 
     def get(self, request):
-        carros = Carro.objects.filter(usuario=request.user)  # Filtrar carros do usuário logado
+        carros = Carro.objects.filter(usuario=request.user)
         return render(request, self.template_name, {'carros': carros})
+
 
 class CadastrarCarroView(View):
     template_name = 'cadastrar-carro.html'
@@ -173,6 +189,7 @@ class CadastrarCarroView(View):
             return redirect('listagem')
         return render(request, self.template_name, {'form': form})
 
+
 @method_decorator(login_required, name='dispatch')
 class MeuPerfilView(DetailView):
     model = Profile
@@ -182,6 +199,7 @@ class MeuPerfilView(DetailView):
     def get_object(self):
         return self.request.user.profile
 
+
 class AnunciosPublicosView(View):
     template_name = 'anuncios_publicos.html'
 
@@ -189,16 +207,19 @@ class AnunciosPublicosView(View):
         carros = Carro.objects.all()
         return render(request, self.template_name, {'carros': carros})
 
+
 class EditarCarroView(UpdateView):
     model = Carro
     fields = ['marca', 'modelo', 'ano', 'cor', 'preco', 'quilometragem', 'combustivel', 'descricao', 'foto']
     template_name = 'editar_carro.html'
     success_url = reverse_lazy('listagem')
 
+
 class RemoverCarroView(DeleteView):
     model = Carro
     template_name = 'remover_carro.html'
     success_url = reverse_lazy('listagem')
+
 
 class AlterarSenhaView(LoginRequiredMixin, View):
     template_name = 'alterar_senha.html'
@@ -216,25 +237,38 @@ class AlterarSenhaView(LoginRequiredMixin, View):
             return redirect('meuperfil')
         return render(request, self.template_name, {'form': form})
 
+
 class DetalhesCarroView(DetailView):
     model = Carro
     template_name = 'detalhes_carro.html'
     context_object_name = 'carro'
 
+
 class LoginAPI(APIView):
-    permission_classes = []  # Permite acesso público para o login
+    permission_classes = []
 
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-        
-        # Autenticar o usuário
+
         user = authenticate(username=username, password=password)
-        
+
         if user:
-            # Gera um token ou obtém o token existente
             token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         else:
-            # Responde com erro se as credenciais forem inválidas
             return Response({'error': 'Credenciais inválidas'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PerfilUsuarioView(View):
+    template_name = 'perfil_usuario.html'
+
+    def get(self, request, usuario_id):
+        usuario = get_object_or_404(User, id=usuario_id)
+        profile = get_object_or_404(Profile, user=usuario)
+        anuncios = Carro.objects.filter(usuario=usuario)
+        return render(request, self.template_name, {
+            'usuario': usuario,
+            'profile': profile,
+            'anuncios': anuncios
+        })

@@ -10,12 +10,12 @@
             font-family: 'Poppins', sans-serif;
             background-color: #f1f1f1;
             margin: 0;
-            padding: 20px; /* Adiciona um padding para evitar que o conteúdo fique colado nas bordas */
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Garante que o container ocupe a altura total da tela */
-            overflow: auto; /* Permite rolagem se o conteúdo ultrapassar a tela */
+            min-height: 100vh;
+            overflow: auto;
         }
 
         .perfil-container {
@@ -24,19 +24,19 @@
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 400px; /* Limita a largura do container */
-            box-sizing: border-box; /* Inclui padding e borda na largura total */
+            max-width: 400px;
+            box-sizing: border-box;
         }
 
         h1 {
-            font-size: 24px; /* Tamanho de fonte ajustado */
+            font-size: 24px;
             margin-bottom: 20px;
             color: #34495E;
             text-align: center;
         }
 
         label {
-            font-size: 14px; /* Tamanho de fonte reduzido para os rótulos */
+            font-size: 14px;
             margin-bottom: 5px;
             color: #333;
             display: block;
@@ -44,12 +44,12 @@
 
         input, button {
             width: 100%;
-            padding: 10px; /* Ajuste de padding para os campos */
+            padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 8px;
-            font-size: 14px; /* Tamanho de fonte reduzido para entradas */
-            box-sizing: border-box; /* Inclui padding e borda na largura total */
+            font-size: 14px;
+            box-sizing: border-box;
         }
 
         .foto-perfil {
@@ -57,16 +57,16 @@
             justify-content: center;
             margin-bottom: 20px;
             flex-direction: column;
-            align-items: center; /* Centraliza a imagem e o botão */
+            align-items: center;
         }
 
         .foto-perfil img {
-            width: 100px; /* Tamanho ajustado da imagem */
-            height: 100px; /* Tamanho ajustado da imagem */
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px; /* Espaço entre a imagem e o botão de alterar foto */
+            margin-bottom: 10px;
         }
 
         button {
@@ -121,13 +121,16 @@
             {{ form.email }}
 
             <label for="foto">Modificar Foto:</label>
-            <input type="file" id="foto" name="foto">
+            {{ form.foto }}
 
             <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" name="cpf" value="{{ user.profile.cpf }}" required>
+            {{ form.cpf }}
 
             <label for="data_nascimento">Data de Nascimento:</label>
-            <input type="date" id="data_nascimento" name="data_nascimento" value="{{ user.profile.data_nascimento|date:'Y-m-d' }}" required>
+            {{ form.data_nascimento }}
+
+            <label for="telefone">Telefone:</label>
+            {{ form.telefone }}
 
             <button type="submit">Salvar Alterações</button>
 

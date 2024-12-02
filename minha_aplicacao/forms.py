@@ -12,22 +12,37 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=255)
     password = forms.CharField(widget=forms.PasswordInput)
 
+import re
+from django import forms
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from django.contrib.auth.models import User
+
 class CadastroForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True, label='Nome')
+    last_name = forms.CharField(max_length=30, required=True, label='Sobrenome')
     password = forms.CharField(widget=forms.PasswordInput, label='Senha')
     confirm_password = forms.CharField(widget=forms.PasswordInput, label='Confirmar Senha')
     foto = forms.ImageField(required=False, label='Foto de Perfil')
     data_nascimento = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Data de Nascimento')
     cpf = forms.CharField(max_length=11, label='CPF')
+    telefone = forms.CharField(max_length=15, required=False, label='Telefone')
 
     class Meta:
         model = User
-        fields = ['username', 'email']  # Campos que serão exibidos
+        fields = ['username', 'email', 'first_name', 'last_name']  # Adicionado first_name e last_name
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
         if len(password) < 8:
             raise ValidationError('A senha deve ter pelo menos 8 caracteres.')
         return password
+
+    def clean_telefone(self):
+        telefone = self.cleaned_data.get('telefone')
+        if telefone and not re.match(r'^\+?\d{10,15}$', telefone):
+            raise ValidationError('Digite um número de telefone válido (com DDD, pode incluir o código do país).')
+        return telefone
 
     def clean(self):
         cleaned_data = super().clean()
@@ -70,10 +85,16 @@ class EditarPerfilForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=False, label='Nome')
     last_name = forms.CharField(max_length=30, required=False, label='Sobrenome')
     email = forms.EmailField(max_length=254, required=False, label='Email')
+    telefone = forms.CharField(
+        max_length=15,
+        required=False,
+        label='Telefone',
+        widget=forms.TextInput(attrs={'placeholder': 'Formato: +5511999999999'})
+    )
 
     class Meta:
         model = Profile
-        fields = ['foto', 'data_nascimento', 'cpf']
+        fields = ['foto', 'data_nascimento', 'cpf', 'telefone']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
