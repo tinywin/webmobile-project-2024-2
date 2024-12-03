@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+ion-content {
+  --background: #f4f6f8;
+  padding: 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  a {
+    text-decoration: none;
+    color: #007bff !important; // Ajustando para azul com !important para garantir que seja aplicado
+    font-weight: 600 !important;
+    padding: 10px 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    ion-icon {
+      margin-right: 6px;
+      font-size: 20px;
+    }
+
+    &:hover {
+      background-color: #e3f2fd;
+    }
+
+    &.active {
+      background-color: #005bb5;
+      color: white !important; // Garantindo que seja branco quando ativo
+    }
+  }
+}
+
+.carros-container {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.carro-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: left;
+
+  h2 {
+    font-size: 20px;
+    color: #1f4e78;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+
+  .preco {
+    color: #e74c3c;
+    font-weight: 700;
+  }
+
+  .img-container {
+    margin-top: 15px;
+
+    ion-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .no-foto {
+      color: #999;
+      font-size: 14px;
+    }
+  }
+}
+
+footer {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #999;
+  text-align: center;
+}

@@ -10,7 +10,10 @@
 
     <!-- Foto de perfil -->
     <div class="foto-perfil">
-      <img src="https://via.placeholder.com/120" alt="Foto de perfil">
+      <img *ngIf="fotoPreview; else placeholder" [src]="fotoPreview" alt="Foto de perfil">
+      <ng-template #placeholder>
+        <img src="https://via.placeholder.com/120" alt="Foto de perfil">
+      </ng-template>
     </div>
 
     <!-- Formulário de Cadastro -->

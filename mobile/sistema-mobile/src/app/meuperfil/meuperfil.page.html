@@ -20,7 +20,7 @@
       </a>
     </ion-col>
     <ion-col size="2" class="nav-item">
-      <a routerLink="/listagem" class="nav-link">
+      <a routerLink="/meus-carros" class="nav-link">
         <ion-icon name="list" size="large"></ion-icon>
         <p>Meus Carros</p>
       </a>
@@ -32,11 +32,11 @@
       </a>
     </ion-col>
     <ion-col size="2" class="nav-item">
-      <a routerLink="/logout" class="nav-link">
+      <a (click)="logout()" class="nav-link">
         <ion-icon name="log-out" size="large"></ion-icon>
         <p>Sair</p>
       </a>
-    </ion-col>
+    </ion-col>    
   </ion-row>
 
   <!-- Perfil Container -->

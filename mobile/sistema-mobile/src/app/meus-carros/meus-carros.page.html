@@ -1,10 +1,10 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Anúncios de Carros</ion-title>
+    <ion-title>Meus Carros</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content> <!-- Corrigido: Adicionando o início da tag <ion-content> -->
+<ion-content class="ion-padding">
 
   <!-- Navbar -->
   <ion-row class="navbar ion-margin-bottom ion-align-items-center ion-justify-content-around">
@@ -37,12 +37,12 @@
         <ion-icon name="log-out" size="large"></ion-icon>
         <p>Sair</p>
       </a>
-    </ion-col>
+    </ion-col>    
   </ion-row>
 
-  <!-- Título -->
+  <!-- Título da Página -->
   <div class="ion-text-center ion-margin-bottom">
-    <h1>Anúncios de Carros</h1>
+    <h1>Meus Carros</h1>
   </div>
 
   <!-- Conteúdo dos Carros -->
@@ -50,7 +50,7 @@
     <ion-grid *ngIf="!erroCarregamento">
       <ion-row>
         <ion-col size="12" size-md="6" size-lg="4" *ngFor="let carro of carros">
-          <div class="carro-card ion-padding ion-margin-bottom" (click)="goToDetails(carro.id)">
+          <div class="carro-card ion-padding ion-margin-bottom">
             <h2>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h2>
             <p>Cor: {{ carro.cor }}</p>
             <p class="preco">Preço: R$ {{ carro.preco }}</p>
@@ -58,19 +58,18 @@
               <ion-img *ngIf="carro.foto" [src]="carro.foto"></ion-img>
               <p class="no-foto" *ngIf="!carro.foto">Sem foto disponível</p>
             </div>
+            <div class="buttons">
+              <ion-button (click)="editarCarro(carro.id)" color="primary" expand="block">Editar</ion-button>
+              <ion-button (click)="removerCarro(carro.id)" color="danger" expand="block">Remover</ion-button>
+            </div>
           </div>
         </ion-col>
       </ion-row>
     </ion-grid>
     <div class="ion-text-center ion-margin" *ngIf="erroCarregamento">
-      <p class="no-carros">{{ erroCarregamento }}</p>
+      <p>{{ erroCarregamento }}</p>
     </div>
     <p class="ion-text-center no-carros" *ngIf="!carros.length && !erroCarregamento">Nenhum carro disponível no momento.</p>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    &copy; 2024 Sistema de Gerenciamento de Carros. Todos os direitos reservados.
-  </footer>
-  
-</ion-content> <!-- Correção: Tag de fechamento adicionada corretamente -->
+</ion-content>

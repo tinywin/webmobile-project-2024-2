@@ -15,11 +15,15 @@ export class CarrosService {
     return this.http.get<any>(this.apiUrl);
   }
 
- // Método para obter os detalhes de um carro específico
+  // Método para obter os detalhes de um carro específico
   getCarroById(id: string): Observable<any> {
-  return this.http.get<any>(`${this.apiUrl}${id}/`);
-}
+    return this.http.get<any>(`${this.apiUrl}${id}/`);
+  }
 
+  // Método para obter os carros do usuário atual
+  getMeusCarros(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}meus-carros/`);
+  }
 
   // Método para cadastrar um novo carro
   cadastrarCarro(carroData: any): Observable<any> {
@@ -31,5 +35,20 @@ export class CarrosService {
     });
 
     return this.http.post<any>(this.apiUrl, formData);
+  }
+
+  // Método para editar um carro específico
+  editarCarro(id: number, carroData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}${id}/`, carroData);
+  }
+
+// Método para atualizar carro com FormData
+atualizarCarro(carroId: number, formData: FormData): Observable<any> {
+  return this.http.put(`${this.apiUrl}${carroId}/`, formData);
+}
+  
+  // Método para remover um carro específico
+  removerCarro(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}${id}/`);
   }
 }

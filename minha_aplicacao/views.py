@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from .forms import LoginForm, CadastroForm, CarroForm, EditarPerfilForm
 from django.core.exceptions import ValidationError
 from .models import Carro, Profile
+from rest_framework.generics import ListAPIView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
@@ -271,11 +272,13 @@ class PerfilUsuarioView(View):
         usuario = get_object_or_404(User, id=usuario_id)
         profile = get_object_or_404(Profile, user=usuario)
         anuncios = Carro.objects.filter(usuario=usuario)
+
         return render(request, self.template_name, {
             'usuario': usuario,
             'profile': profile,
             'anuncios': anuncios
         })
+
 
 class EditarPerfilAPI(APIView):
     permission_classes = [IsAuthenticated]  # Garantir que apenas usuários autenticados possam atualizar o perfil
@@ -373,3 +376,112 @@ class LogoutAPI(APIView):
             return Response({"message": "Logout realizado com sucesso."}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": f"Erro ao realizar logout: {e}"}, status=status.HTTP_400_BAD_REQUEST)
+
+class EditarCarroAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, pk):
+        """
+        Edita totalmente um carro específico do usuário.
+        """
+        carro = get_object_or_404(Carro, pk=pk, usuario=request.user)
+        serializer = CarroSerializer(carro, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        """
+        Edita parcialmente um carro específico do usuário.
+        """
+        carro = get_object_or_404(Carro, pk=pk, usuario=request.user)
+        serializer = CarroSerializer(carro, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RemoverCarroAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        """
+        Remove um carro específico do usuário autenticado.
+        """
+        carro = get_object_or_404(Carro, pk=pk, usuario=request.user)
+
+        try:
+            carro.delete()
+            return Response({'message': 'Carro removido com sucesso!'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': f'Erro ao remover carro: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+
+class DetalhesCarroAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        """
+        Retorna os detalhes de um carro específico.
+        """
+        carro = get_object_or_404(Carro, pk=pk)
+        serializer = CarroSerializer(carro)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class CadastrarCarroAPI(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        """
+        Cadastra um novo carro para o usuário autenticado.
+        """
+        serializer = CarroSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(usuario=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class MeusCarrosAPI(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CarroSerializer
+
+    def get_queryset(self):
+        """
+        Retorna apenas os carros do usuário logado.
+        """
+        return Carro.objects.filter(usuario=self.request.user)
+    
+class PerfilUsuarioAPI(APIView):
+    """
+    API para buscar as informações de um perfil de usuário específico.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, usuario_id):
+        # Busca o usuário pelo ID
+        usuario = get_object_or_404(User, id=usuario_id)
+        profile = get_object_or_404(Profile, user=usuario)
+
+        # Serializa os dados do perfil
+        profile_data = ProfileSerializer(profile).data
+
+        # Busca os anúncios do usuário
+        anuncios = Carro.objects.filter(usuario=usuario)
+        anuncios_data = CarroSerializer(anuncios, many=True).data
+
+        # Retorna a resposta combinada, incluindo a foto
+        return Response({
+            "user": {
+                "id": usuario.id,
+                "username": usuario.username,
+                "first_name": usuario.first_name,
+                "last_name": usuario.last_name,
+                "email": usuario.email,
+                "foto": profile.foto.url if profile.foto else None,  # Inclui o caminho completo da foto
+            },
+            "profile": profile_data,
+            "anuncios": anuncios_data
+        })

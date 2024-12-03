@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="voltarParaHome()">Cancelar</ion-button>
+    </ion-buttons>
+    <ion-title>Editar Carro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="form-container">
+  <form [formGroup]="carroForm" (ngSubmit)="editarCarro()" enctype="multipart/form-data">
+    <h1>Editar Carro</h1>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Marca:</ion-label>
+      <ion-select formControlName="marca">
+        <ion-select-option *ngFor="let marca of marcasChoices" [value]="marca.value">
+          {{ marca.label }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Modelo:</ion-label>
+      <ion-input formControlName="modelo"></ion-input>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Ano:</ion-label>
+      <ion-input type="number" formControlName="ano"></ion-input>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Cor:</ion-label>
+      <ion-select formControlName="cor">
+        <ion-select-option *ngFor="let cor of coresChoices" [value]="cor.value">
+          {{ cor.label }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Combustível:</ion-label>
+      <ion-select formControlName="combustivel">
+        <ion-select-option *ngFor="let combustivel of combustivelChoices" [value]="combustivel.value">
+          {{ combustivel.label }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Quilometragem:</ion-label>
+      <ion-input type="number" formControlName="quilometragem"></ion-input>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Preço:</ion-label>
+      <ion-input type="number" formControlName="preco"></ion-input>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="stacked">Descrição:</ion-label>
+      <ion-textarea formControlName="descricao"></ion-textarea>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="stacked">Foto:</ion-label>
+      <div class="file-input-wrapper">
+        <input type="file" (change)="onFileChange($event)">
+      </div>
+    </ion-item>
+
+    <div class="button-group">
+      <ion-button expand="block" type="submit" color="primary">Salvar</ion-button>
+      <ion-button expand="block" color="light" (click)="voltarParaHome()">Cancelar</ion-button>
+    </div>
+  </form>
+</ion-content>

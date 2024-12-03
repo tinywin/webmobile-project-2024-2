@@ -10,11 +10,13 @@ import { catchError, tap } from 'rxjs/operators';
 export class AuthService {
   private apiUrlLogin = 'http://127.0.0.1:8000/api/login/'; // URL da API de login
   private apiUrlRegister = 'http://127.0.0.1:8000/api/register/'; // URL da API de registro
+  private apiUrlLogout = 'http://127.0.0.1:8000/api/logout/'; // URL da API de logout
 
   constructor(private http: HttpClient, private router: Router) {
     this.checkAuthentication();
   }
 
+  // Verifica se o usuário está autenticado
   public checkAuthentication(): boolean {
     const token = localStorage.getItem('token');
     return !!token; // Retorna verdadeiro se o token existir
@@ -46,24 +48,30 @@ export class AuthService {
     );
   }
 
+  // Método que armazena o token e redireciona após o login
   handleLogin(response: any): void {
     const token = response.token; // Certifique-se de que o token é retornado assim
     localStorage.setItem('token', token);
     this.router.navigate(['/home']);
   }
 
+  // Método para logout
   logout(): void {
-    this.http.post('http://127.0.0.1:8000/api/logout/', {}).subscribe({
+    this.http.post(this.apiUrlLogout, {}).pipe(
+      catchError(error => {
+        console.error('Erro ao fazer logout:', error);
+        alert('Erro ao realizar logout. Tente novamente.');
+        return throwError(() => new Error('Erro ao realizar logout'));
+      })
+    ).subscribe({
       next: () => {
         localStorage.removeItem('token'); // Remove o token local
         this.router.navigate(['/entrar']); // Redireciona para a tela de login
-      },
-      error: (error) => {
-        console.error('Erro ao fazer logout:', error);
-        alert('Erro ao realizar logout. Tente novamente.');
-      },
+      }
     });
-  }  
+  }
+
+  // Método que verifica se o usuário está autenticado
   isAuthenticated(): boolean {
     return this.checkAuthentication();
   }

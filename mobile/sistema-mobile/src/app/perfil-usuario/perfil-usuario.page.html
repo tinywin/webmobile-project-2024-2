@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Perfil de {{ usuario?.username }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="perfil-container">
+    <!-- Foto do Perfil ou Inicial -->
+    <div class="foto-perfil">
+      <img *ngIf="usuario?.foto; else inicial" [src]="getProfileImageUrl(usuario.foto)" alt="Foto de {{ usuario?.username }}">
+      <ng-template #inicial>
+        <span class="inicial">{{ usuario?.first_name?.charAt(0) || usuario?.username?.charAt(0) }}</span>
+      </ng-template>
+    </div>
+
+    <!-- Nome Completo e Nome de Usuário -->
+    <h1>{{ usuario?.first_name }} {{ usuario?.last_name }}</h1>
+    <p class="detalhes"><strong>{{ '@' + usuario?.username }}</strong></p>
+
+    <!-- Telefone -->
+    <p class="detalhes"><strong>Telefone:</strong> {{ usuario?.telefone }}</p>
+
+    <!-- Anúncios Criados -->
+    <div class="anuncios">
+      <h2>Anúncios Criados</h2>
+      <div *ngIf="anuncios && anuncios.length > 0; else noAnuncios">
+        <div *ngFor="let anuncio of anuncios" class="anuncio-card" (click)="goToDetalhesCarro(anuncio.id)">
+          <h3>{{ anuncio?.marca }} {{ anuncio?.modelo }} ({{ anuncio?.ano }})</h3>
+          <p><strong>Preço:</strong> R$ {{ anuncio?.preco }}</p>
+          <p><strong>Quilometragem:</strong> {{ anuncio?.quilometragem }} km</p>
+        </div>
+      </div>
+      <ng-template #noAnuncios>
+        <p class="detalhes">Este usuário ainda não criou anúncios.</p>
+      </ng-template>
+    </div>
+
+    <!-- Botão Voltar -->
+    <ion-button expand="block" color="primary" (click)="goToHome()">Voltar</ion-button>
+  </div>
+</ion-content>

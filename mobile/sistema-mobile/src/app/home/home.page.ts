@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { CarrosService } from '../services/carros.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,11 @@ export class HomePage implements OnInit {
   carros: any[] = [];
   erroCarregamento: string | null = null;
 
-  constructor(private carroService: CarrosService, private router: Router) {}
+  constructor(
+    private carroService: CarrosService,
+    private router: Router,
+    private authService: AuthService // Importar o AuthService para o logout
+  ) {}
 
   ngOnInit() {
     this.loadCarros();
@@ -43,5 +48,9 @@ export class HomePage implements OnInit {
 
   goToPerfil() {
     this.router.navigate(['/meuperfil']);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

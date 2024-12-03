@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ProfileService } from '../services/profile.service';
+import { AuthService } from '../services/auth.service'; // Importar AuthService
 
 @Component({
   selector: 'app-meuperfil',
@@ -16,7 +17,11 @@ import { ProfileService } from '../services/profile.service';
 export class MeuPerfilPage implements OnInit {
   profile: any = null;
 
-  constructor(private router: Router, private profileService: ProfileService) {}
+  constructor(
+    private router: Router,
+    private profileService: ProfileService,
+    private authService: AuthService // Injetar o AuthService
+  ) {}
 
   ngOnInit() {
     this.loadProfile();
@@ -50,5 +55,9 @@ export class MeuPerfilPage implements OnInit {
 
   getProfileImageUrl(imagePath: string): string {
     return imagePath.startsWith('http') ? imagePath : `http://127.0.0.1:8000${imagePath}`;
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
