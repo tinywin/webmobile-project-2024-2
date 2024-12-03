@@ -4,7 +4,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content> <!-- Corrigido: Adicionando o início da tag <ion-content> -->
+
   <!-- Navbar -->
   <ion-row class="navbar ion-margin-bottom ion-align-items-center ion-justify-content-around">
     <ion-col size="2" class="nav-item">
@@ -26,7 +27,7 @@
       </a>
     </ion-col>
     <ion-col size="2" class="nav-item">
-      <a routerLink="/perfil" class="nav-link">
+      <a routerLink="/meuperfil" class="nav-link">
         <ion-icon name="person" size="large"></ion-icon>
         <p>Perfil</p>
       </a>
@@ -45,27 +46,31 @@
   </div>
 
   <!-- Conteúdo dos Carros -->
-  <ion-grid class="carros-container">
-    <ion-row>
-      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let carro of carros">
-        <div class="carro-card ion-padding ion-margin-bottom">
-          <h2>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h2>
-          <p>Cor: {{ carro.cor }}</p>
-          <p class="preco">Preço: R$ {{ carro.preco }}</p>
-          <ion-img *ngIf="carro.foto" [src]="carro.foto" class="ion-margin-top"></ion-img>
-          <p class="no-foto ion-margin-top" *ngIf="!carro.foto">Sem foto disponível</p>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <p class="ion-text-center no-carros" *ngIf="!carros.length">Nenhum carro disponível no momento.</p>
+  <div class="carros-container">
+    <ion-grid *ngIf="!erroCarregamento">
+      <ion-row>
+        <ion-col size="12" size-md="6" size-lg="4" *ngFor="let carro of carros">
+          <div class="carro-card ion-padding ion-margin-bottom" (click)="goToDetails(carro.id)">
+            <h2>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h2>
+            <p>Cor: {{ carro.cor }}</p>
+            <p class="preco">Preço: R$ {{ carro.preco }}</p>
+            <div class="img-container">
+              <ion-img *ngIf="carro.foto" [src]="carro.foto"></ion-img>
+              <p class="no-foto" *ngIf="!carro.foto">Sem foto disponível</p>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div class="ion-text-center ion-margin" *ngIf="erroCarregamento">
+      <p class="no-carros">{{ erroCarregamento }}</p>
+    </div>
+    <p class="ion-text-center no-carros" *ngIf="!carros.length && !erroCarregamento">Nenhum carro disponível no momento.</p>
+  </div>
 
   <!-- Footer -->
-  <ion-footer>
-    <ion-toolbar>
-      <div class="ion-text-center">
-        &copy; 2024 Sistema de Gerenciamento de Carros. Todos os direitos reservados.
-      </div>
-    </ion-toolbar>
-  </ion-footer>
-</ion-content>
+  <footer>
+    &copy; 2024 Sistema de Gerenciamento de Carros. Todos os direitos reservados.
+  </footer>
+  
+</ion-content> <!-- Correção: Tag de fechamento adicionada corretamente -->

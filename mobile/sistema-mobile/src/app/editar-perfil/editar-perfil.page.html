@@ -10,48 +10,52 @@
 
     <!-- Foto de perfil -->
     <div class="foto-perfil">
-      <img [src]="perfilForm.get('foto')?.value ? perfilForm.get('foto')?.value : 'https://via.placeholder.com/100'" alt="Foto de Perfil">
-      <input type="file" (change)="alterarFoto($event)" />
+      <img [src]="profileForm.get('foto')?.value ? getProfileImageUrl(profileForm.get('foto')?.value) : 'https://via.placeholder.com/120'" alt="Foto de Perfil">
     </div>
 
     <!-- Formulário de edição -->
-    <form [formGroup]="perfilForm" (ngSubmit)="onSubmit()">
-      <ion-item>
-        <ion-label position="stacked">Nome:</ion-label>
-        <ion-input formControlName="first_name" type="text" required></ion-input>
+    <form [formGroup]="profileForm" (ngSubmit)="onSave()" enctype="multipart/form-data">
+      <ion-item lines="inset">
+        <ion-label position="floating">Nome</ion-label>
+        <ion-input type="text" formControlName="first_name"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Sobrenome:</ion-label>
-        <ion-input formControlName="last_name" type="text" required></ion-input>
+      <ion-item lines="inset">
+        <ion-label position="floating">Sobrenome</ion-label>
+        <ion-input type="text" formControlName="last_name"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">E-mail:</ion-label>
-        <ion-input formControlName="email" type="email" required></ion-input>
+      <ion-item lines="inset">
+        <ion-label position="floating">E-mail</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">CPF:</ion-label>
-        <ion-input formControlName="cpf" type="text" required></ion-input>
+      <div class="file-input-container">
+        <label for="file-upload" class="file-label">Modificar Foto:</label>
+        <input id="file-upload" type="file" (change)="onFileChange($event)" />
+      </div>
+
+      <ion-item lines="inset">
+        <ion-label position="floating">CPF</ion-label>
+        <ion-input type="text" formControlName="cpf"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label position="stacked">Data de Nascimento:</ion-label>
-        <ion-datetime formControlName="data_nascimento" displayFormat="YYYY-MM-DD" required></ion-datetime>
+      <ion-item lines="inset">
+        <ion-label position="floating">Data de Nascimento</ion-label>
+        <ion-input type="date" formControlName="data_nascimento"></ion-input>
       </ion-item>
 
-      <ion-button expand="block" type="submit">Salvar Alterações</ion-button>
+      <ion-item lines="inset">
+        <ion-label position="floating">Telefone</ion-label>
+        <ion-input type="text" formControlName="telefone"></ion-input>
+      </ion-item>
+
+      <ion-button expand="full" type="submit" [disabled]="profileForm.invalid">Salvar Alterações</ion-button>
+
+      <!-- Exibição de erros -->
+      <ul class="error-list" *ngIf="profileForm.errors && profileForm.touched">
+        <li *ngFor="let error of getFormErrors()">{{ error }}</li>
+      </ul>
     </form>
-
-    <!-- Exibição de erros -->
-    <div *ngIf="perfilForm.invalid && perfilForm.touched" class="error-list">
-      <p *ngIf="perfilForm.get('first_name')?.errors?.['required']">Nome é obrigatório.</p>
-      <p *ngIf="perfilForm.get('last_name')?.errors?.['required']">Sobrenome é obrigatório.</p>
-      <p *ngIf="perfilForm.get('email')?.errors?.['required']">E-mail é obrigatório.</p>
-      <p *ngIf="perfilForm.get('email')?.errors?.['email']">E-mail inválido.</p>
-      <p *ngIf="perfilForm.get('cpf')?.errors?.['required']">CPF é obrigatório.</p>
-      <p *ngIf="perfilForm.get('data_nascimento')?.errors?.['required']">Data de Nascimento é obrigatória.</p>
-    </div>
   </div>
 </ion-content>

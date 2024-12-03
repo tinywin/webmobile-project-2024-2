@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CarrosService {
-  private apiUrl = 'http://localhost:8000/api/carros'; // Endpoint do backend
+  private apiUrl = 'http://localhost:8000/api/carros/';
 
   constructor(private http: HttpClient) {}
 
@@ -15,16 +15,21 @@ export class CarrosService {
     return this.http.get<any>(this.apiUrl);
   }
 
+ // Método para obter os detalhes de um carro específico
+  getCarroById(id: string): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}${id}/`);
+}
+
+
   // Método para cadastrar um novo carro
   cadastrarCarro(carroData: any): Observable<any> {
     const formData = new FormData();
 
-    // Adiciona cada campo do carroData ao formData, incluindo a foto
+    // Adiciona os dados ao FormData
     Object.keys(carroData).forEach(key => {
       formData.append(key, carroData[key]);
     });
 
-    // Faz o envio do formData para a API
     return this.http.post<any>(this.apiUrl, formData);
   }
 }

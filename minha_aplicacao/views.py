@@ -9,6 +9,7 @@ from .models import Carro, Profile
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from rest_framework.permissions import AllowAny
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from django.contrib import messages
@@ -25,39 +26,42 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 
-# ViewSet para o Profile
 class ProfileViewSet(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
-    def list(self, request):
-        profiles = Profile.objects.all()
-        serializer = ProfileSerializer(profiles, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        profile = get_object_or_404(Profile, pk=pk)
-        serializer = ProfileSerializer(profile)
-        return Response(serializer.data)
-
     @action(detail=False, methods=['get'])
     def me(self, request):
+        """
+        Obtém o perfil do usuário logado.
+        """
         profile = get_object_or_404(Profile, user=request.user)
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
 
-    def update(self, request, pk=None):
-        profile = get_object_or_404(Profile, pk=pk)
-        if profile.user != request.user:
-            return Response({'error': 'Você não tem permissão para editar este perfil.'}, status=status.HTTP_403_FORBIDDEN)
-
+    @action(detail=False, methods=['patch', 'put'])
+    def update_me(self, request):
+        """
+        Atualiza o perfil do usuário logado.
+        """
+        profile = get_object_or_404(Profile, user=request.user)
+        
+        # Usar partial=True para permitir atualizações parciais
         serializer = ProfileSerializer(profile, data=request.data, partial=True)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# ViewSet para o Carro
+    
+    def list(self, request):
+        """
+        Lista todos os perfis, apenas para fins de administração ou testes.
+        """
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many=True)
+        return Response(serializer.data)
 class CarroViewSet(viewsets.ModelViewSet):
     queryset = Carro.objects.all()
     serializer_class = CarroSerializer
@@ -272,3 +276,100 @@ class PerfilUsuarioView(View):
             'profile': profile,
             'anuncios': anuncios
         })
+
+class EditarPerfilAPI(APIView):
+    permission_classes = [IsAuthenticated]  # Garantir que apenas usuários autenticados possam atualizar o perfil
+
+    def patch(self, request):
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            return Response({"error": "Perfil não encontrado."}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Cria o serializer para atualizar o perfil
+        serializer = ProfileSerializer(profile, data=request.data, partial=True)  # partial=True permite que apenas os campos enviados sejam atualizados
+        
+        if serializer.is_valid():
+            serializer.save()  # Salva as alterações no perfil
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class RegisterAPI(APIView):
+    """
+    API para registrar novos usuários e preencher o perfil.
+    """
+    permission_classes = [AllowAny]  # Permitir acesso público ao endpoint
+
+    def post(self, request):
+        data = request.data
+
+        # Verificar se o nome de usuário ou email já existem
+        if User.objects.filter(username=data.get('username')).exists():
+            return Response({"error": "O nome de usuário já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(email=data.get('email')).exists():
+            return Response({"error": "O e-mail já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
+
+        if Profile.objects.filter(cpf=data.get('cpf')).exists():
+            return Response({"error": "O CPF já está em uso."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Criar o usuário
+            user = User.objects.create_user(
+                username=data.get('username'),
+                email=data.get('email'),
+                password=data.get('password'),
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name')
+            )
+            print(f"Usuário criado: {user}")
+
+            # Atualizar os campos adicionais do perfil automaticamente criado pelo sinal
+            profile = user.profile  # O sinal já criou o perfil
+
+            # Verificar o campo 'foto'
+            foto = request.FILES.get('foto', None)  # Busca em request.FILES
+            profile.foto = foto  # Salva a foto (se enviada)
+
+            profile.data_nascimento = data.get('data_nascimento')
+            profile.cpf = data.get('cpf')
+            profile.telefone = data.get('telefone')
+            profile.save()
+
+            # Gerar Token de autenticação
+            token, created = Token.objects.get_or_create(user=user)
+
+            return Response({
+                "message": "Usuário registrado com sucesso.",
+                "token": token.key,
+                "user": {
+                    "username": user.username,
+                    "email": user.email,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name
+                },
+                "profile": {
+                    "data_nascimento": profile.data_nascimento,
+                    "cpf": profile.cpf,
+                    "telefone": profile.telefone,
+                    "foto": profile.foto.url if profile.foto else None
+                }
+            }, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            print(f"Erro ao registrar usuário: {e}")
+            return Response({"error": f"Erro ao registrar usuário: {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class LogoutAPI(APIView):
+    """
+    Endpoint para logout do usuário.
+    """
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request):
+        try:
+            # Invalida o token do usuário
+            request.user.auth_token.delete()
+            return Response({"message": "Logout realizado com sucesso."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": f"Erro ao realizar logout: {e}"}, status=status.HTTP_400_BAD_REQUEST)

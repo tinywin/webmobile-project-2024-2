@@ -7,13 +7,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProfileService } from '../services/profile.service';
 
 @Component({
-  selector: 'app-perfil',
-  templateUrl: './perfil.page.html',
-  styleUrls: ['./perfil.page.scss'],
+  selector: 'app-meuperfil',
+  templateUrl: './meuperfil.page.html',
+  styleUrls: ['./meuperfil.page.scss'],
   standalone: true,
   imports: [IonicModule, CommonModule, RouterModule, HttpClientModule]
 })
-export class PerfilPage implements OnInit {
+export class MeuPerfilPage implements OnInit {
   profile: any = null;
 
   constructor(private router: Router, private profileService: ProfileService) {}
@@ -25,6 +25,13 @@ export class PerfilPage implements OnInit {
   loadProfile() {
     this.profileService.getProfile().subscribe(
       (data) => {
+        if (data.date_joined) {
+          const date = new Date(data.date_joined);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+          const year = date.getFullYear();
+          data.date_joined = `${day}/${month}/${year}`;
+        }
         this.profile = data;
       },
       (error) => {
@@ -35,6 +42,10 @@ export class PerfilPage implements OnInit {
 
   editarPerfil() {
     this.router.navigate(['/editar-perfil']);
+  }
+
+  voltarParaHome() {
+    this.router.navigate(['/home']);
   }
 
   getProfileImageUrl(imagePath: string): string {

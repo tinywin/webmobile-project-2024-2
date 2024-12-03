@@ -15,6 +15,7 @@ import { CarrosService } from '../services/carros.service';
 })
 export class HomePage implements OnInit {
   carros: any[] = [];
+  erroCarregamento: string | null = null;
 
   constructor(private carroService: CarrosService, private router: Router) {}
 
@@ -25,21 +26,22 @@ export class HomePage implements OnInit {
   loadCarros() {
     this.carroService.getCarros().subscribe(
       (data) => {
-        console.log('Dados recebidos:', data); // Verifique se os dados estão chegando aqui
+        console.log('Dados recebidos:', data);
         this.carros = data;
+        this.erroCarregamento = null; // Limpa qualquer mensagem de erro anterior
       },
       (error) => {
         console.error('Erro ao carregar os anúncios', error);
+        this.erroCarregamento = 'Erro ao carregar os anúncios de carros. Tente novamente mais tarde.';
       }
     );
   }
-  
 
   goToDetails(carroId: number) {
     this.router.navigate(['/detalhes-carro', carroId]);
   }
 
   goToPerfil() {
-    this.router.navigate(['/perfil']);
+    this.router.navigate(['/meuperfil']);
   }
 }

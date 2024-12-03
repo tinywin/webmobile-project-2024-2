@@ -1,9 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
-    AlterarSenhaView, ProfileViewSet, CarroViewSet, LoginAPI, LoginView,
+    AlterarSenhaView, ProfileViewSet, CarroViewSet, LoginAPI, LogoutAPI, LoginView,
     CadastroView, HomeView, LogoutView, EditarPerfilView, ListagemView,
-    MeuPerfilView, AnunciosPublicosView, CadastrarCarroView, EditarCarroView,
+    MeuPerfilView, AnunciosPublicosView, RegisterAPI, CadastrarCarroView, EditarCarroView,
     RemoverCarroView, DetalhesCarroView, PerfilUsuarioView
 )
 
@@ -38,6 +38,8 @@ urlpatterns = [
     path('perfil/<int:usuario_id>/', PerfilUsuarioView.as_view(), name='perfil_usuario'),
 
     # API Endpoints
+    path('api/register/', RegisterAPI.as_view(), name='register_api'),
+    path('api/logout/', LogoutAPI.as_view(), name='api-logout'),
     path('api/login/', LoginAPI.as_view(), name='login_api'),
     path('', include(router.urls)),  # Roteador do DRF
 ]

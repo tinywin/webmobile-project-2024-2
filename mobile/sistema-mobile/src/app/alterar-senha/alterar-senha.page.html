@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Alterar Senha</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="senha-container">
+  <div class="form-wrapper">
+    <form [formGroup]="senhaForm" (ngSubmit)="alterarSenha()">
+      <h1>Alterar Senha</h1>
+
+      <!-- Campo para senha antiga -->
+      <ion-item class="rounded-input">
+        <ion-label position="stacked">Senha Antiga</ion-label>
+        <ion-input type="password" formControlName="senhaAntiga" placeholder="Digite sua senha antiga"></ion-input>
+      </ion-item>
+
+      <!-- Campo para nova senha -->
+      <ion-item class="rounded-input">
+        <ion-label position="stacked">Nova Senha</ion-label>
+        <ion-input type="password" formControlName="novaSenha1" placeholder="Digite a nova senha"></ion-input>
+      </ion-item>
+
+      <!-- Campo para confirmar nova senha -->
+      <ion-item class="rounded-input">
+        <ion-label position="stacked">Confirmar Nova Senha</ion-label>
+        <ion-input type="password" formControlName="novaSenha2" placeholder="Confirme a nova senha"></ion-input>
+      </ion-item>
+
+      <!-- Mensagem de erro -->
+      <div *ngIf="senhaForm.invalid && senhaForm.touched" class="error-list">
+        <p *ngIf="senhaForm.hasError('passwordMismatch')">As senhas não coincidem.</p>
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="button-group">
+        <ion-button expand="block" type="submit" color="primary">Alterar Senha</ion-button>
+        <ion-button expand="block" color="medium" (click)="voltarParaPerfil()">Cancelar</ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

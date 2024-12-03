@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Detalhes do Carro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div class="carro-details">
+    <h1>{{ carro.marca }} {{ carro.modelo }} ({{ carro.ano }})</h1>
+
+    <!-- Condicional para foto -->
+    <ion-img *ngIf="carro.foto; else noImage" [src]="carro.foto" class="carro-img"></ion-img>
+    <ng-template #noImage>
+      <p>Sem foto disponível.</p>
+    </ng-template>
+
+    <!-- Informações do carro -->
+    <div class="info-container">
+      <p class="detalhes"><strong>Cor:</strong> {{ carro.cor }}</p>
+      <p class="detalhes"><strong>Preço:</strong> R$ {{ carro.preco }}</p>
+      <p class="detalhes"><strong>Quilometragem:</strong> {{ carro.quilometragem }} km</p>
+      <p class="detalhes"><strong>Combustível:</strong> {{ carro.combustivel }}</p>
+      <p class="detalhes"><strong>Descrição:</strong> {{ carro.descricao }}</p>
+    </div>
+
+    <!-- Link para o perfil do usuário -->
+    <ion-button [routerLink]="['/perfil', carro.usuario.id]" expand="full" color="primary">
+      Ver perfil de {{ carro.usuario.username }}
+    </ion-button>
+
+    <!-- Botão para voltar -->
+    <ion-button [routerLink]="['/home']" expand="full" color="secondary" class="voltar-btn">
+      Voltar para Anúncios Públicos
+    </ion-button>
+  </div>
+
+</ion-content>

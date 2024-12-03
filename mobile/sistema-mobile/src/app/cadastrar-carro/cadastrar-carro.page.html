@@ -1,53 +1,78 @@
-<div class="form-container">
-  <h1>Cadastrar Novo Carro</h1>
-  <form [formGroup]="carroForm" (ngSubmit)="cadastrarCarro()">
-    <div class="form-row">
-      <div>
-        <label for="marca">Marca:</label>
-        <input id="marca" formControlName="marca" type="text" placeholder="Marca do carro" />
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="voltarParaHome()">Cancelar</ion-button>
+    </ion-buttons>
+    <ion-title>Cadastrar Carro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="form-container">
+  <form [formGroup]="carroForm" (ngSubmit)="cadastrarCarro()" enctype="multipart/form-data">
+    <h1>Cadastrar Novo Carro</h1>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Marca:</ion-label>
+      <ion-select formControlName="marca">
+        <ion-select-option *ngFor="let marca of marcasChoices" [value]="marca.value">
+          {{ marca.label }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Modelo:</ion-label>
+      <ion-input formControlName="modelo"></ion-input>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Ano:</ion-label>
+      <ion-input type="number" formControlName="ano"></ion-input>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Cor:</ion-label>
+      <ion-select formControlName="cor">
+        <ion-select-option *ngFor="let cor of coresChoices" [value]="cor.value">
+          {{ cor.label }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Combustível:</ion-label>
+      <ion-select formControlName="combustivel">
+        <ion-select-option *ngFor="let combustivel of combustivelChoices" [value]="combustivel.value">
+          {{ combustivel.label }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Quilometragem:</ion-label>
+      <ion-input type="number" formControlName="quilometragem"></ion-input>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="floating">Preço:</ion-label>
+      <ion-input type="number" formControlName="preco"></ion-input>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="stacked">Descrição:</ion-label>
+      <ion-textarea formControlName="descricao"></ion-textarea>
+    </ion-item>
+
+    <ion-item class="rounded-input">
+      <ion-label position="stacked">Foto:</ion-label>
+      <div class="file-input-wrapper">
+        <ion-input type="file" (change)="onFileChange($event)"></ion-input>
       </div>
-      <div>
-        <label for="modelo">Modelo:</label>
-        <input id="modelo" formControlName="modelo" type="text" placeholder="Modelo do carro" />
-      </div>
+    </ion-item>
+
+    <div class="button-group">
+      <ion-button expand="block" type="submit" color="primary">Cadastrar</ion-button>
+      <ion-button expand="block" color="light" (click)="voltarParaHome()">Cancelar</ion-button>
     </div>
-
-    <div class="form-row">
-      <div>
-        <label for="ano">Ano:</label>
-        <input id="ano" formControlName="ano" type="number" placeholder="Ano de fabricação" />
-      </div>
-      <div>
-        <label for="cor">Cor:</label>
-        <input id="cor" formControlName="cor" type="text" placeholder="Cor do carro" />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div>
-        <label for="combustivel">Combustível:</label>
-        <select id="combustivel" formControlName="combustivel">
-          <option value="Gasolina">Gasolina</option>
-          <option value="Diesel">Diesel</option>
-          <option value="Etanol">Etanol</option>
-          <option value="Elétrico">Elétrico</option>
-        </select>
-      </div>
-      <div>
-        <label for="quilometragem">Quilometragem:</label>
-        <input id="quilometragem" formControlName="quilometragem" type="number" placeholder="Quilometragem" />
-      </div>
-    </div>
-
-    <label for="preco">Preço:</label>
-    <input id="preco" formControlName="preco" type="number" placeholder="Preço" />
-
-    <label for="descricao">Descrição:</label>
-    <textarea id="descricao" formControlName="descricao" placeholder="Descrição do carro"></textarea>
-
-    <label for="foto">Foto:</label>
-    <input id="foto" type="file" (change)="onFileChange($event)" />
-
-    <button type="submit">Cadastrar Carro</button>
   </form>
-</div>
+</ion-content>

@@ -1,99 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
+body {
+  font-family: 'Merriweather', serif;
+  background-color: #f4f4f4; /* Fundo claro */
+  color: #333;
+}
+
 .login-content {
-    --background: #f1f1f1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} 
+  --background: #f4f4f4; /* Fundo muito claro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .login-container {
-    background-color: #ffffff;
-    padding: 40px 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 360px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+  background-color: #ffffff; /* Fundo do contêiner em branco */
+  padding: 30px 20px;
+  border-radius: 16px; /* Bordas arredondadas */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px; /* Largura máxima */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-h1 {
-    font-size: 24px;
+  h1 {
+    font-size: 26px;
+    color: #34495e; /* Azul escuro */
+    font-weight: 700;
+    margin-bottom: 25px;
+  }
+
+  form {
+    width: 100%;
+  }
+
+  .input-item {
+    --background: #ffffff; /* Fundo branco dos campos */
+    --padding-start: 16px;
+    --padding-end: 16px;
     margin-bottom: 20px;
-    color: #333;
-    font-weight: 700;
-}
+    border-radius: 12px; /* Bordas arredondadas */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Sombra leve */
+  
+    ion-label {
+      font-size: 16px;
+      color: #34495e; /* Azul escuro */
+      font-weight: 600;
+      font-family: 'Merriweather', serif;
+    }
 
-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    ion-input {
+      font-size: 16px;
+      padding: 12px 0;
+      color: #333; /* Cor do texto preta */
+      font-family: 'Merriweather', serif;
+    }
+  }
 
-.input-container {
-    width: 100%;
-    margin: 10px 0;
-}
-
-.input-field {
-    width: 100%;
-    padding: 14px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    font-family: 'Lato', sans-serif;
-    box-sizing: border-box;
-}
-
-.login-button {
-    width: 100%;
-    padding: 14px;
-    background-color: #2C3E50;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  .login-button {
+    background-color: #3498db; /* Azul principal */
+    color: #ffffff; /* Texto branco */
+    font-weight: 600;
+    font-family: 'Merriweather', serif;
+    border-radius: 12px; /* Bordas arredondadas */
+    transition: background-color 0.3s ease, transform 0.2s;
     margin-top: 15px;
-}
 
-.login-button:hover {
-    background-color: #34495E;
-}
+    &:hover {
+      background-color: #2980b9; /* Azul mais escuro ao passar o mouse */
+      transform: translateY(-2px);
+    }
+  }
 
-.signup-button {
-    width: 100%;
-    padding: 14px;
-    background-color: #ffffff;
-    border: 1px solid #2C3E50;
-    border-radius: 6px;
-    color: #2C3E50;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
-}
+  .signup-button {
+    margin-top: 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: 'Merriweather', serif;
+    color: #3498db; /* Azul para texto */
+  }
 
-.signup-button:hover {
-    background-color: #f1f1f1;
-}
-
-.forgot-link {
-    margin-top: 15px;
-    color: #2C3E50;
+  .forgot-link {
+    margin-top: 20px;
+    color: #34495e; /* Azul escuro */
     text-decoration: none;
     font-size: 14px;
-}
 
-.forgot-link:hover {
-    text-decoration: underline;
-}  
-.error-message {
-    color: #e74c3c;
-    text-align: center;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .error-message {
+    color: #e74c3c; /* Vermelho para mensagens de erro */
+    font-size: 14px;
     margin-top: 10px;
+    text-align: center;
+  }
 }
